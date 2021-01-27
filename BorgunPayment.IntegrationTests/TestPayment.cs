@@ -7,10 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BorgunPayment.Model;
+using BorgunRpgClient.Model;
 using System.Net;
 
-namespace BorgunPayment.IntegrationTests
+namespace BorgunRpgClient.IntegrationTests
 {
     [TestClass]
     public class TestPayment

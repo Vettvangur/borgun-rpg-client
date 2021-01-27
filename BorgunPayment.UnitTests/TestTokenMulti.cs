@@ -1,5 +1,5 @@
-﻿using BorgunPayment.Model;
-using BorgunPayment.UnitTests.Mock;
+﻿using BorgunRpgClient.Model;
+using BorgunRpgClient.UnitTests.Mock;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BorgunPayment.UnitTests
+namespace BorgunRpgClient.UnitTests
 {
     [TestClass]
     class TestTokenMulti

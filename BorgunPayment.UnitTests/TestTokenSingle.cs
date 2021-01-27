@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
-using BorgunPayment.Model;
-using BorgunPayment.UnitTests.Mock;
+using BorgunRpgClient.Model;
+using BorgunRpgClient.UnitTests.Mock;
 
-namespace BorgunPayment.UnitTests
+namespace BorgunRpgClient.UnitTests
 {
     [TestClass]
     public class TestTokenSingle

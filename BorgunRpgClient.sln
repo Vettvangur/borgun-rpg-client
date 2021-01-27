@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorgunRpgClient.UnitTests", "BorgunPayment.UnitTests\BorgunRpgClient.UnitTests.csproj", "{AE31BAB3-4644-4422-A828-8DBCDD797046}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorgunRpgClient.IntegrationTests", "BorgunPayment.IntegrationTests\BorgunRpgClient.IntegrationTests.csproj", "{57985AFA-EC64-4E0B-99C1-58AEBE4876C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorgunRpgClient", "BorgunRpgClient\BorgunRpgClient.csproj", "{6AAA4CCD-329D-4C6A-A358-E186E6E5E47A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE31BAB3-4644-4422-A828-8DBCDD797046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE31BAB3-4644-4422-A828-8DBCDD797046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE31BAB3-4644-4422-A828-8DBCDD797046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE31BAB3-4644-4422-A828-8DBCDD797046}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57985AFA-EC64-4E0B-99C1-58AEBE4876C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57985AFA-EC64-4E0B-99C1-58AEBE4876C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57985AFA-EC64-4E0B-99C1-58AEBE4876C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57985AFA-EC64-4E0B-99C1-58AEBE4876C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AAA4CCD-329D-4C6A-A358-E186E6E5E47A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AAA4CCD-329D-4C6A-A358-E186E6E5E47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AAA4CCD-329D-4C6A-A358-E186E6E5E47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AAA4CCD-329D-4C6A-A358-E186E6E5E47A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F62230B3-393F-4D05-98A3-9ACF1531DC1D}
+	EndGlobalSection
+EndGlobal

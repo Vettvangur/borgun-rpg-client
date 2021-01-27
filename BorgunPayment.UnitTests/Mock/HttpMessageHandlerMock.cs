@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using System;
 
-namespace BorgunPayment.UnitTests.Mock
+namespace BorgunRpgClient.UnitTests.Mock
 {
     public class HttpMessageHandlerMock : HttpMessageHandler
     {

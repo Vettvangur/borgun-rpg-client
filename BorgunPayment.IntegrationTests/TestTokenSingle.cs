@@ -2,10 +2,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Configuration;
 using System.IO;
-using BorgunPayment.Model;
+using BorgunRpgClient.Model;
 using System.Net;
 
-namespace BorgunPayment.IntegrationTests
+namespace BorgunRpgClient.IntegrationTests
 {
     [TestClass]
     public class TestTokenSingle

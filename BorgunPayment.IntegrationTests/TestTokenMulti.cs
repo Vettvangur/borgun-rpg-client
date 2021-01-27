@@ -1,4 +1,4 @@
-﻿using BorgunPayment.Model;
+﻿using BorgunRpgClient.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BorgunPayment.IntegrationTests
+namespace BorgunRpgClient.IntegrationTests
 {
     [TestClass]
     public class TestTokenMulti
