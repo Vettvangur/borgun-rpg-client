@@ -25,7 +25,9 @@ namespace BorgunRpgClient.API
         {
             var paymentRes = new PaymentTransactionResponse();
 
-            var resp = await _client.PostAsJsonAsync("payment", req).ConfigureAwait(false);
+            var resp = await DefaultPolly.PurchaseTransactionPolicy()
+                .ExecuteAsync(() =>_client.PostAsJsonAsync("payment", req))
+                .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
 
@@ -40,7 +42,9 @@ namespace BorgunRpgClient.API
 
         public async Task<TransactionInfo> GetTransactionAsync(string transactionId)
         {
-            var resp = await _client.GetAsync("payment/" + transactionId).ConfigureAwait(false);
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.GetAsync("payment/" + transactionId))
+                .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
 
@@ -49,7 +53,9 @@ namespace BorgunRpgClient.API
 
         public async Task<CancelAuthorizationResponse> CancelAsync(string transactionId)
         {
-            var resp = await _client.PutAsync("payment/" + transactionId + "/cancel", null).ConfigureAwait(false);
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.PutAsync("payment/" + transactionId + "/cancel", null))
+                .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
 
@@ -58,7 +64,9 @@ namespace BorgunRpgClient.API
 
         public async Task<CaptureAuthorizationResponse> CaptureAsync(string transactionId)
         {
-            var resp = await _client.PutAsync("payment/" + transactionId + "/capture", null).ConfigureAwait(false);
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.PutAsync("payment/" + transactionId + "/capture", null))
+                .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
 
@@ -67,7 +75,9 @@ namespace BorgunRpgClient.API
 
         public async Task<RefundAuthorizationResponse> RefundAsync(string transactionId)
         {
-            var resp = await _client.PutAsync("payment/" + transactionId + "/refund", null).ConfigureAwait(false);
+            var resp = await DefaultPolly.PurchaseTransactionPolicy()
+                .ExecuteAsync(() => _client.PutAsync("payment/" + transactionId + "/refund", null))
+                .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
 

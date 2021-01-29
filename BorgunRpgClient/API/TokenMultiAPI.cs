@@ -24,7 +24,9 @@ namespace BorgunRpgClient.API
         public async Task<TokenMultiResponse> CreateAsync(TokenMultiRequest req)
         {
             var tokenRes = new TokenMultiResponse();
-            var resp = await _client.PostAsJsonAsync("token/multi", req).ConfigureAwait(false);
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.PostAsJsonAsync("token/multi", req))
+                .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
 
@@ -39,7 +41,9 @@ namespace BorgunRpgClient.API
 
         public async Task<TokenMultiInfo> GetAsync(string token)
         {
-            var resp = await _client.GetAsync("token/multi/" + token).ConfigureAwait(false);
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.GetAsync("token/multi/" + token))
+                .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
 
@@ -48,7 +52,8 @@ namespace BorgunRpgClient.API
 
         public async Task DisableAsync(string token)
         {
-            var resp = await _client.PutAsync("token/multi/" + token + "/disable", null)
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.PutAsync("token/multi/" + token + "/disable", null))
                 .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);

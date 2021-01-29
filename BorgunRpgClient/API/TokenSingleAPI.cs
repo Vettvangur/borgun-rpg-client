@@ -25,7 +25,8 @@ namespace BorgunRpgClient.API
         public async Task<TokenSingleResponse> CreateAsync(TokenSingleRequest req)
         {
             var tokenRes = new TokenSingleResponse();
-            var resp = await _client.PostAsJsonAsync("token/single", req)
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.PostAsJsonAsync("token/single", req))
                 .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
@@ -42,7 +43,8 @@ namespace BorgunRpgClient.API
 
         public async Task<TokenSingleInfo> GetAsync(string token)
         {
-            var resp = await _client.GetAsync("token/single/" + token)
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.GetAsync("token/single/" + token))
                 .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
@@ -53,7 +55,8 @@ namespace BorgunRpgClient.API
 
         public async Task DisableAsync(string token)
         {
-            var resp = await _client.PutAsync("token/single/" + token + "/disable", null)
+            var resp = await DefaultPolly.Policy()
+                .ExecuteAsync(() => _client.PutAsync("token/single/" + token + "/disable", null))
                 .ConfigureAwait(false);
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);

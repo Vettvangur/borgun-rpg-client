@@ -20,11 +20,15 @@ namespace BorgunRpgClient
 
         private readonly IPaymentAPI _payment;
 
+        private readonly IMpiAPI _mpi;
+
         public ITokenSingleAPI TokenSingle { get { return _tokenSingle; } }
 
         public ITokenMultiAPI TokenMulti { get { return _tokenMulti; } }
 
         public IPaymentAPI Payment { get { return _payment; } }
+
+        public IMpiAPI Mpi { get { return _mpi; } }
 
         public RPGClient(string merchantKey, string serviceUri, ILogger logger, HttpMessageHandler httpMessageHandler)
         {
@@ -42,6 +46,7 @@ namespace BorgunRpgClient
             _tokenSingle = new TokenSingleAPI(_client, logger);
             _tokenMulti = new TokenMultiAPI(_client, logger);
             _payment = new PaymentAPI(_client, logger);
+            _mpi = new MpiAPI(_client, logger);
         }
 
         public RPGClient(string merchantKey, string serviceUri, ILogger logger) 
