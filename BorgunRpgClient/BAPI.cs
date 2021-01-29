@@ -1,5 +1,6 @@
-﻿using BorgunRpgClient.API;
+using BorgunRpgClient.API;
 using BorgunRpgClient.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,48 +12,49 @@ namespace BorgunRpgClient
 {
     public class RPGClient : IRPGClient
     {
-        private HttpClient client;
+        private readonly HttpClient _client;
 
-        private ITokenSingleAPI tokenSingle;
+        private readonly ITokenSingleAPI _tokenSingle;
 
-        private ITokenMultiAPI tokenMulti;
+        private readonly ITokenMultiAPI _tokenMulti;
 
-        private IPaymentAPI payment;
+        private readonly IPaymentAPI _payment;
 
-        public ITokenSingleAPI TokenSingle { get { return tokenSingle; } }
+        public ITokenSingleAPI TokenSingle { get { return _tokenSingle; } }
 
-        public ITokenMultiAPI TokenMulti { get { return tokenMulti; } }
+        public ITokenMultiAPI TokenMulti { get { return _tokenMulti; } }
 
-        public IPaymentAPI Payment { get { return payment; } }
+        public IPaymentAPI Payment { get { return _payment; } }
 
-        public RPGClient(string merchantKey, string serviceUri, HttpMessageHandler httpMessageHandler)
+        public RPGClient(string merchantKey, string serviceUri, ILogger logger, HttpMessageHandler httpMessageHandler)
         {
-            this.client = new HttpClient(httpMessageHandler);
+            _client = new HttpClient(httpMessageHandler);
 
-            this.client.DefaultRequestHeaders.Accept.Clear();
-            this.client.DefaultRequestHeaders.Accept.Add(
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            this.client.BaseAddress = new Uri(serviceUri);
-            this.client.DefaultRequestHeaders.Authorization 
+            _client.BaseAddress = new Uri(serviceUri);
+            _client.DefaultRequestHeaders.Authorization 
                 = new AuthenticationHeaderValue(
                     "Basic",
                     Convert.ToBase64String(Encoding.UTF8.GetBytes(merchantKey + ":")));
 
-            this.tokenSingle = new TokenSingleAPI(this.client);
-            this.tokenMulti = new TokenMultiAPI(this.client);
-            this.payment = new PaymentAPI(this.client);
+            _tokenSingle = new TokenSingleAPI(_client, logger);
+            _tokenMulti = new TokenMultiAPI(_client, logger);
+            _payment = new PaymentAPI(_client, logger);
         }
 
-        public RPGClient(string merchantKey, string serviceUri) : this(merchantKey, serviceUri, new HttpClientHandler())
+        public RPGClient(string merchantKey, string serviceUri, ILogger logger) 
+            : this(merchantKey, serviceUri, logger, new HttpClientHandler())
         {
 
         }
 
         public RPGClient(IPaymentAPI paymentApi, ITokenSingleAPI tokenSingleApi, ITokenMultiAPI tokenMultiApi)
         {
-            this.payment = paymentApi;
-            this.tokenSingle = tokenSingleApi;
-            this.tokenMulti = tokenMultiApi;
+            _payment = paymentApi;
+            _tokenSingle = tokenSingleApi;
+            _tokenMulti = tokenMultiApi;
         }
     }
 }

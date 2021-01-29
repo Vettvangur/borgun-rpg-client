@@ -7,7 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorgunRpgClient.UnitTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorgunRpgClient.IntegrationTests", "BorgunPayment.IntegrationTests\BorgunRpgClient.IntegrationTests.csproj", "{57985AFA-EC64-4E0B-99C1-58AEBE4876C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorgunRpgClient", "BorgunRpgClient\BorgunRpgClient.csproj", "{6AAA4CCD-329D-4C6A-A358-E186E6E5E47A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BorgunRpgClient", "BorgunRpgClient\BorgunRpgClient.csproj", "{6AAA4CCD-329D-4C6A-A358-E186E6E5E47A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7990E7C-9B2E-4DEC-974D-DA12A27346A7}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		release-build-push.ps1 = release-build-push.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

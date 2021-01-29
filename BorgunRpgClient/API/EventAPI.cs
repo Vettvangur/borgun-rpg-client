@@ -1,4 +1,5 @@
-﻿using System;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,11 +10,13 @@ namespace BorgunRpgClient.API
 {
     public class EventAPI
     {
-        private HttpClient client;
+        private readonly HttpClient _client;
+        private readonly ILogger _logger;
 
-        public EventAPI(HttpClient client)
+        public EventAPI(HttpClient client, ILogger logger)
         {
-            this.client = client;
+            _client = client;
+            _logger = logger;
         }
 
     }

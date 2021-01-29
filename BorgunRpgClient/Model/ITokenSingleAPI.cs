@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace BorgunRpgClient.Model
 {
@@ -6,8 +6,8 @@ namespace BorgunRpgClient.Model
     {
         Task<TokenSingleResponse> CreateAsync(TokenSingleRequest req);
 
-        Task<TokenSingleResponse> DisableAsync(string token);
+        Task DisableAsync(string token);
 
-        Task<TokenSingleResponse> GetAsync(string token);
+        Task<TokenSingleInfo> GetAsync(string token);
     }
 }

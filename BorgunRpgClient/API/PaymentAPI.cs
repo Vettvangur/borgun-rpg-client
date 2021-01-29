@@ -1,4 +1,6 @@
-﻿using BorgunRpgClient.Model;
+using BorgunRpgClient.Exceptions;
+using BorgunRpgClient.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,105 +12,80 @@ namespace BorgunRpgClient.API
 {
     public class PaymentAPI : IPaymentAPI
     {
-        private HttpClient client;
+        private readonly HttpClient _client;
+        private readonly ILogger _logger;
 
-        public PaymentAPI(HttpClient client)
+        public PaymentAPI(HttpClient client, ILogger logger)
         {
-            this.client = client;
+            _client = client;
+            _logger = logger;
         }
 
         public async Task<PaymentTransactionResponse> CreateAsync(PaymentRequest req)
         {
-            PaymentTransactionResponse paymentRes = new PaymentTransactionResponse();
-            HttpResponseMessage httpRes = await this.client.PostAsJsonAsync("api/payment", req);
-            paymentRes.StatusCode = (int)httpRes.StatusCode;
+            var paymentRes = new PaymentTransactionResponse();
 
-            if (httpRes.IsSuccessStatusCode)
+            var resp = await _client.PostAsJsonAsync("payment", req).ConfigureAwait(false);
+
+            await HandleErrorResponseAsync(resp).ConfigureAwait(false);
+
+            paymentRes.Transaction = await resp.Content.ReadAsAsync<TransactionInfo>().ConfigureAwait(false);
+            if (resp.Headers.Location != null)
             {
-                paymentRes.Transaction = await httpRes.Content.ReadAsAsync<TransactionInfo>();
-                if (httpRes.Headers.Location != null)
+                paymentRes.Uri = resp.Headers.Location.AbsoluteUri;
+            }
+
+            return paymentRes;
+        }
+
+        public async Task<TransactionInfo> GetTransactionAsync(string transactionId)
+        {
+            var resp = await _client.GetAsync("payment/" + transactionId).ConfigureAwait(false);
+
+            await HandleErrorResponseAsync(resp).ConfigureAwait(false);
+
+            return await resp.Content.ReadAsAsync<TransactionInfo>().ConfigureAwait(false);
+        }
+
+        public async Task<CancelAuthorizationResponse> CancelAsync(string transactionId)
+        {
+            var resp = await _client.PutAsync("payment/" + transactionId + "/cancel", null).ConfigureAwait(false);
+
+            await HandleErrorResponseAsync(resp).ConfigureAwait(false);
+
+            return await resp.Content.ReadAsAsync<CancelAuthorizationResponse>().ConfigureAwait(false);
+        }
+
+        public async Task<CaptureAuthorizationResponse> CaptureAsync(string transactionId)
+        {
+            var resp = await _client.PutAsync("payment/" + transactionId + "/capture", null).ConfigureAwait(false);
+
+            await HandleErrorResponseAsync(resp).ConfigureAwait(false);
+
+            return await resp.Content.ReadAsAsync<CaptureAuthorizationResponse>().ConfigureAwait(false);
+        }
+
+        public async Task<RefundAuthorizationResponse> RefundAsync(string transactionId)
+        {
+            var resp = await _client.PutAsync("payment/" + transactionId + "/refund", null).ConfigureAwait(false);
+
+            await HandleErrorResponseAsync(resp).ConfigureAwait(false);
+
+            return await resp.Content.ReadAsAsync<RefundAuthorizationResponse>().ConfigureAwait(false);
+        }
+
+        private async Task HandleErrorResponseAsync(HttpResponseMessage response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                _logger.LogError($"StatusCode: {response.StatusCode} - {errorResponse}");
+
+                throw new BorgunPaymentApiException
                 {
-                    paymentRes.Uri = httpRes.Headers.Location.AbsoluteUri;
-                }
+                    Response = response
+                };
             }
-            else
-            {
-                paymentRes.Message = await httpRes.Content.ReadAsStringAsync();
-            }
-
-            return paymentRes;
-        }
-
-        public async Task<PaymentTransactionResponse> GetTransactionAsync(string transactionId)
-        {
-            PaymentTransactionResponse paymentRes = new PaymentTransactionResponse();
-            HttpResponseMessage httpRes = await this.client.GetAsync("api/payment/" + transactionId);
-            paymentRes.StatusCode = (int)httpRes.StatusCode;
-
-            if (httpRes.IsSuccessStatusCode)
-            {
-                paymentRes.Transaction = await httpRes.Content.ReadAsAsync<TransactionInfo>();
-            }
-            else
-            {
-                paymentRes.Message = await httpRes.Content.ReadAsStringAsync();
-            }
-
-            return paymentRes;
-        }
-
-        public async Task<PaymentCancelResponse> CancelAsync(string transactionId)
-        {
-            PaymentCancelResponse paymentRes = new PaymentCancelResponse();
-            HttpResponseMessage httpRes = await this.client.PutAsync("api/payment/" + transactionId + "/cancel", null);
-            paymentRes.StatusCode = (int)httpRes.StatusCode;
-
-            if (httpRes.IsSuccessStatusCode)
-            {
-                paymentRes.Result = await httpRes.Content.ReadAsAsync<CancelAuthorizationResponse>();
-            }
-            else
-            {
-                paymentRes.Message = await httpRes.Content.ReadAsStringAsync();
-            }
-
-            return paymentRes;
-        }
-
-        public async Task<PaymentCaptureResponse> CaptureAsync(string transactionId)
-        {
-            PaymentCaptureResponse paymentRes = new PaymentCaptureResponse();
-            HttpResponseMessage httpRes = await this.client.PutAsync("api/payment/" + transactionId + "/capture", null);
-            paymentRes.StatusCode = (int)httpRes.StatusCode;
-
-            if (httpRes.IsSuccessStatusCode)
-            {
-                paymentRes.Result = await httpRes.Content.ReadAsAsync<CaptureAuthorizationResponse>();
-            }
-            else
-            {
-                paymentRes.Message = await httpRes.Content.ReadAsStringAsync();
-            }
-
-            return paymentRes;
-        }
-
-        public async Task<PaymentRefundResponse> RefundAsync(string transactionId)
-        {
-            PaymentRefundResponse paymentRes = new PaymentRefundResponse();
-            HttpResponseMessage httpRes = await this.client.PutAsync("api/payment/" + transactionId + "/refund", null);
-            paymentRes.StatusCode = (int)httpRes.StatusCode;
-
-            if (httpRes.IsSuccessStatusCode)
-            {
-                paymentRes.Result = await httpRes.Content.ReadAsAsync<RefundAuthorizationResponse>();
-            }
-            else
-            {
-                paymentRes.Message = await httpRes.Content.ReadAsStringAsync();
-            }
-
-            return paymentRes;
         }
     }
 }

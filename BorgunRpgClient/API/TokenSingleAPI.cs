@@ -1,4 +1,6 @@
-﻿using BorgunRpgClient.Model;
+using BorgunRpgClient.Exceptions;
+using BorgunRpgClient.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,61 +13,65 @@ namespace BorgunRpgClient.API
 {
     public class TokenSingleAPI : ITokenSingleAPI
     {
-        private HttpClient client;
+        private readonly HttpClient _client;
+        private readonly ILogger _logger;
 
-        public TokenSingleAPI(HttpClient client)
+        public TokenSingleAPI(HttpClient client, ILogger logger)
         {
-            this.client = client;
+            _client = client;
+            _logger = logger;
         }
 
         public async Task<TokenSingleResponse> CreateAsync(TokenSingleRequest req)
         {
-            TokenSingleResponse tokenRes = new TokenSingleResponse();
-            HttpResponseMessage httpRes = await this.client.PostAsJsonAsync("api/token/single", req);
-            tokenRes.StatusCode = (int)httpRes.StatusCode;
+            var tokenRes = new TokenSingleResponse();
+            var resp = await _client.PostAsJsonAsync("token/single", req)
+                .ConfigureAwait(false);
 
-            if (httpRes.IsSuccessStatusCode)
+            await HandleErrorResponseAsync(resp).ConfigureAwait(false);
+
+            tokenRes.Token = await resp.Content.ReadAsAsync<TokenSingleInfo>()
+                .ConfigureAwait(false);
+            if (resp.Headers.Location != null)
             {
-                tokenRes.Token = await httpRes.Content.ReadAsAsync<TokenSingleInfo>();
-                if (httpRes.Headers.Location != null)
+                tokenRes.Uri = resp.Headers.Location.AbsoluteUri;
+            }
+
+            return tokenRes;
+        }
+
+        public async Task<TokenSingleInfo> GetAsync(string token)
+        {
+            var resp = await _client.GetAsync("token/single/" + token)
+                .ConfigureAwait(false);
+
+            await HandleErrorResponseAsync(resp).ConfigureAwait(false);
+
+            return await resp.Content.ReadAsAsync<TokenSingleInfo>()
+                    .ConfigureAwait(false);
+        }
+
+        public async Task DisableAsync(string token)
+        {
+            var resp = await _client.PutAsync("token/single/" + token + "/disable", null)
+                .ConfigureAwait(false);
+
+            await HandleErrorResponseAsync(resp).ConfigureAwait(false);
+        }
+
+        private async Task HandleErrorResponseAsync(HttpResponseMessage response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                _logger.LogError($"StatusCode: {response.StatusCode} - {errorResponse}");
+
+                throw new BorgunSingleTokenApiException
                 {
-                    tokenRes.Uri = httpRes.Headers.Location.AbsoluteUri;
-                }
+                    Response = response
+                };
             }
-            else
-            {
-                tokenRes.Message = await httpRes.Content.ReadAsStringAsync();
-            }
-
-            return tokenRes;
         }
 
-        public async Task<TokenSingleResponse> GetAsync(string token)
-        {
-            TokenSingleResponse tokenRes = new TokenSingleResponse();
-            HttpResponseMessage httpRes = await this.client.GetAsync("api/token/single/" + token);
-            tokenRes.StatusCode = (int)httpRes.StatusCode;
-
-            if (httpRes.IsSuccessStatusCode)
-            {
-                TokenSingleInfo info = await httpRes.Content.ReadAsAsync<TokenSingleInfo>();
-                tokenRes.Token = info;
-            }
-            else
-            {
-                tokenRes.Message = await httpRes.Content.ReadAsStringAsync();
-            }
-
-            return tokenRes;
-        }
-
-        public async Task<TokenSingleResponse> DisableAsync(string token)
-        {
-            TokenSingleResponse tokenRes = new TokenSingleResponse();
-            HttpResponseMessage httpRes = await this.client.PutAsync("api/token/single/" + token + "/disable", null);
-            tokenRes.StatusCode = (int)httpRes.StatusCode;
-
-            return tokenRes;
-        }
     }
 }

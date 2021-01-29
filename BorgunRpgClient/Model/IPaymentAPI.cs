@@ -1,17 +1,17 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace BorgunRpgClient.Model
 {
     public interface IPaymentAPI
     {
-        Task<PaymentCancelResponse> CancelAsync(string transactionId);
+        Task<CancelAuthorizationResponse> CancelAsync(string transactionId);
 
-        Task<PaymentCaptureResponse> CaptureAsync(string transactionId);
+        Task<CaptureAuthorizationResponse> CaptureAsync(string transactionId);
 
         Task<PaymentTransactionResponse> CreateAsync(PaymentRequest req);
 
-        Task<PaymentTransactionResponse> GetTransactionAsync(string transactionId);
+        Task<TransactionInfo> GetTransactionAsync(string transactionId);
 
-        Task<PaymentRefundResponse> RefundAsync(string transactionId);
+        Task<RefundAuthorizationResponse> RefundAsync(string transactionId);
     }
 }
