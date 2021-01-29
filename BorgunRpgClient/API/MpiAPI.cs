@@ -42,7 +42,7 @@ namespace BorgunRpgClient.API
                 .ConfigureAwait(false);
         }
 
-        public async Task<object> PaResValidationAsync(string PARes)
+        public async Task<ValidationResponse> PaResValidationAsync(string PARes)
         {
             var resp = await DefaultPolly.Policy()
                 .ExecuteAsync(() =>_client.PostAsJsonAsync("mpi/v2/validation", new { PARes }))
@@ -50,7 +50,7 @@ namespace BorgunRpgClient.API
 
             await HandleErrorResponseAsync(resp).ConfigureAwait(false);
 
-            return await resp.Content.ReadAsAsync<EnrollmentResponse>().ConfigureAwait(false);
+            return await resp.Content.ReadAsAsync<ValidationResponse>().ConfigureAwait(false);
         }
 
         private async Task HandleErrorResponseAsync(HttpResponseMessage response)
