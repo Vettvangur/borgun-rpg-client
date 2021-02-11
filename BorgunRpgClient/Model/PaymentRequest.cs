@@ -10,7 +10,8 @@ namespace BorgunRpgClient.Model
         public TransactionTypes TransactionType { get; set; }
 
         /// <summary>
-        /// Transaction amount
+        /// Transaction amount <br />
+        /// Library handles adding 00 to amount where Borgun requires
         /// </summary>
         public int? Amount { get; set; }
 
@@ -30,7 +31,9 @@ namespace BorgunRpgClient.Model
         public PaymentRequestMethod PaymentMethod { get; set; }
 
         /// <summary>
-        /// 12 Character RRN of transaction.
+        /// Retrieval Reference Number – Reference number for transaction. Must be exactly 12 characters. Recommended format is a fixed value followed by a sequence, for example ACME00012345. The last six letters must contain a numeric value.
+        /// See https://docs.borgun.is/paymentgateways/bgateway/ RRN
+        /// Optionally use Helpers.CreateRrnFromLong to format
         /// </summary>
         public string OrderId { get; set; }
 

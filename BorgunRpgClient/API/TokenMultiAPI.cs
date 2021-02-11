@@ -23,6 +23,12 @@ namespace BorgunRpgClient.API
 
         public async Task<TokenMultiResponse> CreateAsync(TokenMultiRequest req)
         {
+            // See notes in PaymentAPI
+            if (req.VerifyCard != null && req.VerifyCard.Currency != Currency.JPY.ToString())
+            {
+                req.VerifyCard.CheckAmount *= 100;
+            }
+
             var tokenRes = new TokenMultiResponse();
             var resp = await DefaultPolly.Policy()
                 .ExecuteAsync(() => _client.PostAsJsonAsync("token/multi", req))

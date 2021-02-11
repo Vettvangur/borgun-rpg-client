@@ -1,4 +1,4 @@
-﻿
+
 namespace BorgunRpgClient.Model
 {
     public class VerifyCardResult
@@ -10,7 +10,10 @@ namespace BorgunRpgClient.Model
 
         /// <summary>
         /// Action code received from the gateway during card verification.
+        /// 000 == Accepted
         /// </summary>
         public string ActionCode { get; set; }
+
+        public string ActionCodeDescription => Helpers.FormatActionCode(ActionCode);
     }
 }

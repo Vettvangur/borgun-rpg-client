@@ -1,4 +1,4 @@
-﻿
+
 namespace BorgunRpgClient.Model
 {
     /// <summary>
@@ -26,10 +26,11 @@ namespace BorgunRpgClient.Model
         /// </summary>
         public int TokenLifetime { get; set; }
 
-        /// <summary>
-        /// If provided, the card will be verified by authorizing the card.
-        /// </summary>
-        public VerifyCardRequest VerifyCard { get; set; }
+        // Not documented and doesn't work, use multi if you need verification
+        ///// <summary>
+        ///// If provided, the card will be verified by authorizing the card.
+        ///// </summary>
+        //public VerifyCardRequest VerifyCard { get; set; }
 
         /// <summary>
         /// Merchant Metadata connected to the token.
