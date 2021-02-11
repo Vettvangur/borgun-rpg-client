@@ -23,6 +23,16 @@ namespace BorgunRpgClient.API
 
         public async Task<PaymentTransactionResponse> CreateAsync(PaymentRequest req)
         {
+            // Amount (https://docs.borgun.is/paymentgateways/bapi/rpg/payments.html)
+            // Required Transaction amount, including two decimal points, i.e. 100 USD is 10000.
+            // An exception is JPY, it contains no decimal points.
+
+            // We handle this here, no reason to leave this to caller
+            if (req.Amount.HasValue && req.Currency != Currency.JPY.ToString())
+            {
+                req.Amount *= 100;
+            }
+
             var paymentRes = new PaymentTransactionResponse();
 
             var resp = await DefaultPolly.PurchaseTransactionPolicy()

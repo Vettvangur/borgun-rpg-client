@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace BorgunRpgClient.Model
 {
@@ -10,7 +10,7 @@ namespace BorgunRpgClient.Model
         public TransactionTypes TransactionType { get; set; }
 
         /// <summary>
-        /// Transaction amount with exponent (f.ex. 100ISK = 10000).
+        /// Transaction amount
         /// </summary>
         public int? Amount { get; set; }
 
